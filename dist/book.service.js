@@ -40,12 +40,11 @@ let BookService = class BookService {
             },
         });
     }
-    updateBook(param_id, new_book_info) {
-        const book = this.books.find(list => list.book_id === param_id);
-        if (!book)
-            return undefined;
-        Object.assign(book, new_book_info);
-        return book;
+    async update(book_id, new_book_info) {
+        return this.prisma.book.update({
+            where: { book_id: book_id },
+            data: new_book_info,
+        });
     }
     removeBook(param_id) {
         this.books = this.books.filter(list => list.book_id !== param_id);

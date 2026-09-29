@@ -2,6 +2,7 @@
  import { Book, Status, BookCopy } from './book';
  import { CreateBookDto} from './create_book_dto';
  import { PrismaClient } from '@prisma/client';
+ import { UpdateBookDto} from './update_book_dto';
 
  @Injectable()
  export class BookService {
@@ -43,23 +44,13 @@
   	});
 	}
 	
-	updateBook(
-		param_id: number,
-		new_book_info: Partial<Book>
-	) {	
-		const book = this.books.find(
-		list => list.book_id === param_id
-	);
-	
-	
-	if(!book)
-		return undefined;
-
-	Object.assign(book, new_book_info);
-
-	return book;
+	async update(book_id: number, new_book_info: UpdateBookDto) {
+  	return this.prisma.book.update({
+    where: { book_id: book_id },
+    data: new_book_info,
+ 	 });
 	}
-	
+
 	removeBook(param_id: number) {
     this.books = this.books.filter(
         list => list.book_id !== param_id

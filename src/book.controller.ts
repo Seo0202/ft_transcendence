@@ -11,6 +11,7 @@ import {
 import { BookService } from './book.service';
 import { Book, BookCopy } from './book';
 import { CreateBookDto} from './create_book_dto';
+import { UpdateBookDto} from './update_book_dto';
 
 
 
@@ -33,17 +34,14 @@ export class BookController {
         return this.bookService.findOne(Number(param_id));
     }
 
-   @Patch(':param_id')
-   updateBook(
+
+    @Patch(':param_id')
+    update(
     @Param('param_id') param_id: string,
-    @Body() new_book_info: Partial<Book>
-   )
-   {
-    return this.bookService.updateBook(
-        Number(param_id),
-        new_book_info
-    );
-   }
+    @Body() new_book_info: UpdateBookDto,
+    ) {
+    return this.bookService.update(Number(param_id), new_book_info);
+    }
 
    
    @Delete(':param_id')

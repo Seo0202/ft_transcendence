@@ -16,6 +16,7 @@ exports.BookController = void 0;
 const common_1 = require("@nestjs/common");
 const book_service_1 = require("./book.service");
 const create_book_dto_1 = require("./create_book_dto");
+const update_book_dto_1 = require("./update_book_dto");
 let BookController = class BookController {
     bookService;
     constructor(bookService) {
@@ -30,8 +31,8 @@ let BookController = class BookController {
     findOne(param_id) {
         return this.bookService.findOne(Number(param_id));
     }
-    updateBook(param_id, new_book_info) {
-        return this.bookService.updateBook(Number(param_id), new_book_info);
+    update(param_id, new_book_info) {
+        return this.bookService.update(Number(param_id), new_book_info);
     }
     removeBook(param_id) {
         return this.bookService.removeBook(Number(param_id));
@@ -63,9 +64,9 @@ __decorate([
     __param(0, (0, common_1.Param)('param_id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, update_book_dto_1.UpdateBookDto]),
     __metadata("design:returntype", void 0)
-], BookController.prototype, "updateBook", null);
+], BookController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':param_id'),
     __param(0, (0, common_1.Param)('param_id')),
