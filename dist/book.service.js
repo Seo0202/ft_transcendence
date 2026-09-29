@@ -40,14 +40,19 @@ let BookService = class BookService {
             },
         });
     }
-    async update(book_id, new_book_info) {
+    async updateBook(book_id, new_book_info) {
         return this.prisma.book.update({
             where: { book_id: book_id },
             data: new_book_info,
         });
     }
-    removeBook(param_id) {
-        this.books = this.books.filter(list => list.book_id !== param_id);
+    async removeBook(book_id) {
+        await this.prisma.bookCopy.deleteMany({
+            where: { book_id },
+        });
+        return this.prisma.book.delete({
+            where: { book_id },
+        });
     }
 };
 exports.BookService = BookService;

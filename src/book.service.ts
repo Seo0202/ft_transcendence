@@ -44,16 +44,20 @@
   	});
 	}
 	
-	async update(book_id: number, new_book_info: UpdateBookDto) {
+	async updateBook(book_id: number, new_book_info: UpdateBookDto) {
   	return this.prisma.book.update({
     where: { book_id: book_id },
     data: new_book_info,
  	 });
 	}
 
-	removeBook(param_id: number) {
-    this.books = this.books.filter(
-        list => list.book_id !== param_id
-    );
+	async removeBook(book_id: number) {
+ 	await this.prisma.bookCopy.deleteMany({
+    where: { book_id },
+  	});
+  	return this.prisma.book.delete({
+    where: { book_id },
+  	});
 	}
+	
  }

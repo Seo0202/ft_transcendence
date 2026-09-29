@@ -36,11 +36,11 @@ export class BookController {
 
 
     @Patch(':param_id')
-    update(
+    updateBook(
     @Param('param_id') param_id: string,
     @Body() new_book_info: UpdateBookDto,
     ) {
-    return this.bookService.update(Number(param_id), new_book_info);
+    return this.bookService.updateBook(Number(param_id), new_book_info);
     }
 
    

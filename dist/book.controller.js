@@ -31,8 +31,8 @@ let BookController = class BookController {
     findOne(param_id) {
         return this.bookService.findOne(Number(param_id));
     }
-    update(param_id, new_book_info) {
-        return this.bookService.update(Number(param_id), new_book_info);
+    updateBook(param_id, new_book_info) {
+        return this.bookService.updateBook(Number(param_id), new_book_info);
     }
     removeBook(param_id) {
         return this.bookService.removeBook(Number(param_id));
@@ -66,7 +66,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_book_dto_1.UpdateBookDto]),
     __metadata("design:returntype", void 0)
-], BookController.prototype, "update", null);
+], BookController.prototype, "updateBook", null);
 __decorate([
     (0, common_1.Delete)(':param_id'),
     __param(0, (0, common_1.Param)('param_id')),
