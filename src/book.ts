@@ -1,14 +1,14 @@
-export interface BookList {
-	book_info_id: number;
+export interface Book {
+	book_id: number;
 	title : string;
 	author : string;
 	publisher : string;
 
 }
 
-export interface Book{
+export interface BookCopy{
+	book_copy_id : number;
 	book_id : number;
-	book_info_id : number;
 	status : Status;
 }
 

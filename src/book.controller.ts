@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 
 import { BookService } from './book.service';
-import { Book, BookList } from './book';
+import { Book, BookCopy } from './book';
 
 
 
@@ -18,8 +18,8 @@ export class BookController {
     constructor(private readonly bookService: BookService) {}
 
     @Post()
-    createBookInfo(@Body() book_info: BookList) {
-    return this.bookService.createBookList(book_info);
+    createBook(@Body() new_book_info: Book) {
+    return this.bookService.createBook(new_book_info);
     }
 
     @Get()
@@ -34,32 +34,32 @@ export class BookController {
 
 
    @Post(':param_id/items')
-    createBook(
+    createBookCopy(
     @Param('param_id') param_id: string,
-    @Body() book: Book
+    @Body() bookCopy: BookCopy
     ) {
-    return this.bookService.create({
-        ...book,
-        book_info_id: Number(param_id)
+    return this.bookService.createBookCopy({
+        ...bookCopy,
+        book_id: Number(param_id)
     });
     }
 
    @Patch(':param_id')
    updateBook(
     @Param('param_id') param_id: string,
-    @Body() new_info: Partial<BookList>
+    @Body() new_book_info: Partial<Book>
    )
    {
-    return this.bookService.update(
+    return this.bookService.updateBook(
         Number(param_id),
-        new_info
+        new_book_info
     );
    }
 
    
    @Delete(':param_id')
    removeBook(@Param('param_id') param_id: string) {
-    return this.bookService.remove(Number(param_id));
+    return this.bookService.removeBook(Number(param_id));
   }
 
 }

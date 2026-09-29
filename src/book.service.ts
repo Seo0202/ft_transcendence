@@ -1,58 +1,58 @@
- import { Book, Status, BookList } from './book';
+ import { Book, Status, BookCopy } from './book';
 
  export class BookService {
-	private books: Book[] = [];
-	private bookLists : BookList[] = [];
+	private books : Book[] = [];
+	private bookCopies: BookCopy[] = [];
 
-	createBookList(bookList: BookList) {
-	this.bookLists.push(bookList);
-	return bookList;
+	createBook(book: Book) {
+	this.books.push(book);
+	return book;
 	}
 
-	create(book: Book) {
-		this.books.push(book);
-		return book;
+	createBookCopy(bookCopy: BookCopy) {
+		this.bookCopies.push(bookCopy);
+		return bookCopy;
 	}
 	
 	findAll() {
-		return this.bookLists;
+		return this.books;
 	}
 
 	findOne(param_id: number) {
-    const bookInfo = this.bookLists.find(
-        list => list.book_info_id === param_id
+    const book = this.books.find(
+        list => list.book_id === param_id
     );
 
-    const books = this.books.filter(
-        book => book.book_info_id === param_id
+    const bookCopies = this.bookCopies.filter(
+        bookCopy => bookCopy.book_id === param_id
     );
 
     return {
-        ...bookInfo,
-        books: books
+        ...book,
+        bookCopies: bookCopies
     };	
 	}
 	
-	update(
+	updateBook(
 		param_id: number,
-		new_info: Partial<BookList>
+		new_book_info: Partial<Book>
 	) {	
-		const bookList = this.bookLists.find(
-		list => list.book_info_id === param_id
+		const book = this.books.find(
+		list => list.book_id === param_id
 	);
 	
 	
-	if(!bookList)
+	if(!book)
 		return undefined;
 
-	Object.assign(bookList, new_info);
+	Object.assign(book, new_book_info);
 
-	return bookList;
+	return book;
 	}
 	
-	remove(param_id: number) {
-    this.bookLists = this.bookLists.filter(
-        list => list.book_info_id !== param_id
+	removeBook(param_id: number) {
+    this.books = this.books.filter(
+        list => list.book_id !== param_id
     );
 	}
  }
