@@ -33,7 +33,7 @@ export class BookController {
     }
 
 
-   @Post(':param_id/items')
+   @Post(':param_id/book-copies')
     createBookCopy(
     @Param('param_id') param_id: string,
     @Body() bookCopy: BookCopy
