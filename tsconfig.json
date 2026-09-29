@@ -12,5 +12,12 @@
 
     "strict": true,
     "skipLibCheck": true
-  }
+  },
+
+  "exclude": [
+    "node_modules",
+    "dist",
+    "prisma",
+    "prisma.config.ts"
+  ]
 }
