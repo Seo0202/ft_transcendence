@@ -1,9 +1,10 @@
 export interface Book {
-	book_id: number;
-	title : string;
-	author : string;
-	publisher : string;
-	total_count : number;
+  book_id: number;
+  isbn: string | null;
+  title: string;
+  author: string | null;
+  publisher: string | null;
+  total_count: number;
 }
 
 export interface BookCopy{
