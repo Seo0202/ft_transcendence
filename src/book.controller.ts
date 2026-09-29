@@ -10,6 +10,7 @@ import {
 
 import { BookService } from './book.service';
 import { Book, BookCopy } from './book';
+import { CreateBookDto} from './create_book_dto';
 
 
 
@@ -18,7 +19,7 @@ export class BookController {
     constructor(private readonly bookService: BookService) {}
 
     @Post()
-    createBook(@Body() new_book_info: Book) {
+    createBook(@Body() new_book_info: CreateBookDto) {
     return this.bookService.createBook(new_book_info);
     }
 
@@ -30,18 +31,6 @@ export class BookController {
     @Get(':param_id')
     findOne(@Param('param_id') param_id: string) {
         return this.bookService.findOne(Number(param_id));
-    }
-
-
-   @Post(':param_id/book-copies')
-    createBookCopy(
-    @Param('param_id') param_id: string,
-    @Body() bookCopy: BookCopy
-    ) {
-    return this.bookService.createBookCopy({
-        ...bookCopy,
-        book_id: Number(param_id)
-    });
     }
 
    @Patch(':param_id')

@@ -1,5 +1,6 @@
  import { Injectable } from '@nestjs/common';
  import { Book, Status, BookCopy } from './book';
+ import { CreateBookDto} from './create_book_dto';
  import { PrismaClient } from '@prisma/client';
 
  @Injectable()
@@ -8,14 +9,25 @@
 	private books : Book[] = [];
 	private bookCopies: BookCopy[] = [];
 
-	createBook(book: Book) {
-	this.books.push(book);
-	return book;
+	async createBook(new_book_info: CreateBookDto) {
+  	const book = await this.prisma.book.create({
+    data: new_book_info,
+  	});
+
+	  await this.createBookCopy(book);
+	  
+	  return book;
+	  
 	}
 
-	createBookCopy(bookCopy: BookCopy) {
-		this.bookCopies.push(bookCopy);
-		return bookCopy;
+	async createBookCopy(book: Book) {
+  	for (let i = 0; i < book.total_count; i++) {
+    await this.prisma.bookCopy.create({
+      data: {
+        book_id: book.book_id,
+      },
+    });
+  	}
 	}
 	
 	findAll() {
