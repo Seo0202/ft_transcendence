@@ -1,16 +1,26 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Book {
- id Int @id @default(autoincrement())
- title String
+  book_id     Int     @id @default(autoincrement())
+  isbn        String?
+  title       String
+  total_count Int     @default(1)
+  author      String?
+  publisher   String?
+  copies  BookCopy[]
+}
+
+model BookCopy {
+  book_copy_id Int    @id @default(autoincrement())
+  book_id Int
+  status  String @default("AVAILABLE")
+
+  book Book @relation(fields: [book_id], references: [book_id])
 }

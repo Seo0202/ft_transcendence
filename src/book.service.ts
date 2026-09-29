@@ -1,6 +1,10 @@
+ import { Injectable } from '@nestjs/common';
  import { Book, Status, BookCopy } from './book';
+ import { PrismaClient } from '@prisma/client';
 
+ @Injectable()
  export class BookService {
+	private prisma = new PrismaClient();
 	private books : Book[] = [];
 	private bookCopies: BookCopy[] = [];
 
@@ -15,22 +19,16 @@
 	}
 	
 	findAll() {
-		return this.books;
+		return this.prisma.book.findMany();
 	}
 
-	findOne(param_id: number) {
-    const book = this.books.find(
-        list => list.book_id === param_id
-    );
-
-    const bookCopies = this.bookCopies.filter(
-        bookCopy => bookCopy.book_id === param_id
-    );
-
-    return {
-        ...book,
-        bookCopies: bookCopies
-    };	
+	findOne(book_id: number) {
+  	return this.prisma.book.findUnique({
+    where: { book_id },
+    include: {
+      copies: true,
+    },
+  	});
 	}
 	
 	updateBook(
