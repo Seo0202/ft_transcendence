@@ -2,7 +2,8 @@
  import { Book, Status, BookCopy } from './book';
  import { CreateBookDto} from './create_book_dto';
  import { PrismaClient } from '@prisma/client';
- import { UpdateBookDto} from './update_book_dto';
+ import { UpdateBookDto, UpdateBookCopyDto} from './update_book_dto';
+
 
  @Injectable()
  export class BookService {
@@ -54,6 +55,13 @@
   	return this.prisma.book.update({
     where: { book_id: book_id },
     data: new_book_info,
+ 	 });
+	}
+
+	async updateBookCopy(book_copy_id: number, new_book_copy_info: UpdateBookCopyDto) {
+  	return this.prisma.bookCopy.update({
+    where: { book_copy_id: book_copy_id },
+    data: new_book_copy_info,
  	 });
 	}
 

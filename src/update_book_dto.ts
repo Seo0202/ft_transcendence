@@ -5,3 +5,8 @@ export class UpdateBookDto {
   author?: string;
   publisher?: string;
 }
+
+export class UpdateBookCopyDto {
+  cover?: string;
+  status?: string;
+}

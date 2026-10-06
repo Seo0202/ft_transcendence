@@ -25,6 +25,9 @@ let BookCopyController = class BookCopyController {
     findBookCopy(param_id) {
         return this.bookService.findBookCopy(Number(param_id));
     }
+    updateBookCopy(param_id, new_book_copy_info) {
+        return this.bookService.updateBookCopy(Number(param_id), new_book_copy_info);
+    }
     removeBookCopy(param_id) {
         return this.bookService.removeBookCopy(Number(param_id));
     }
@@ -37,6 +40,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], BookCopyController.prototype, "findBookCopy", null);
+__decorate([
+    (0, common_1.Patch)(':param_id'),
+    __param(0, (0, common_1.Param)('param_id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_book_dto_1.UpdateBookCopyDto]),
+    __metadata("design:returntype", void 0)
+], BookCopyController.prototype, "updateBookCopy", null);
 __decorate([
     (0, common_1.Delete)(':param_id'),
     __param(0, (0, common_1.Param)('param_id')),

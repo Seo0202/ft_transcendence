@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateBookDto = void 0;
+exports.UpdateBookCopyDto = exports.UpdateBookDto = void 0;
 class UpdateBookDto {
     isbn;
     title;
@@ -9,3 +9,8 @@ class UpdateBookDto {
     publisher;
 }
 exports.UpdateBookDto = UpdateBookDto;
+class UpdateBookCopyDto {
+    cover;
+    status;
+}
+exports.UpdateBookCopyDto = UpdateBookCopyDto;

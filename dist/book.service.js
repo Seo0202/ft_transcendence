@@ -51,6 +51,12 @@ let BookService = class BookService {
             data: new_book_info,
         });
     }
+    async updateBookCopy(book_copy_id, new_book_copy_info) {
+        return this.prisma.bookCopy.update({
+            where: { book_copy_id: book_copy_id },
+            data: new_book_copy_info,
+        });
+    }
     async removeBook(book_id) {
         await this.prisma.bookCopy.deleteMany({
             where: { book_id },

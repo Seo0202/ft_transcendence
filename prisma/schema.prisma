@@ -20,6 +20,7 @@ model Book {
 model BookCopy {
   book_copy_id Int    @id @default(autoincrement())
   book_id Int
+  cover   String?
   status  String @default("AVAILABLE")
 
   book Book @relation(fields: [book_id], references: [book_id])

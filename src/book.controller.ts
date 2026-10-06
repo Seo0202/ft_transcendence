@@ -11,8 +11,7 @@ import {
 import { BookService } from './book.service';
 import { Book, BookCopy } from './book';
 import { CreateBookDto} from './create_book_dto';
-import { UpdateBookDto} from './update_book_dto';
-
+import { UpdateBookDto, UpdateBookCopyDto} from './update_book_dto';
 
 
 @Controller('api/book-copy')
@@ -24,8 +23,17 @@ export class BookCopyController {
         return this.bookService.findBookCopy(Number(param_id));
     }
 
+    @Patch(':param_id')
+    updateBookCopy(
+    @Param('param_id') param_id: string,
+    @Body() new_book_copy_info: UpdateBookCopyDto,
+    ) {
+    return this.bookService.updateBookCopy(Number(param_id), new_book_copy_info);
+    }
+
     @Delete(':param_id')
     removeBookCopy(@Param('param_id') param_id: string) {
+
     return this.bookService.removeBookCopy(Number(param_id));
    }
 }
