@@ -15,6 +15,21 @@ import { UpdateBookDto} from './update_book_dto';
 
 
 
+@Controller('api/book-copy')
+export class BookCopyController {
+    constructor(private readonly bookService: BookService) {}
+
+    @Get(':param_id')
+    findBookCopy(@Param('param_id') param_id: string) {
+        return this.bookService.findBookCopy(Number(param_id));
+    }
+
+    @Delete(':param_id')
+    removeBookCopy(@Param('param_id') param_id: string) {
+    return this.bookService.removeBookCopy(Number(param_id));
+   }
+}
+
 @Controller('api/books')
 export class BookController {
     constructor(private readonly bookService: BookService) {}
@@ -47,6 +62,8 @@ export class BookController {
    @Delete(':param_id')
    removeBook(@Param('param_id') param_id: string) {
     return this.bookService.removeBook(Number(param_id));
+
+
   }
 
 }

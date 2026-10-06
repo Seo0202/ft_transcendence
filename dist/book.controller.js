@@ -12,11 +12,42 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookController = void 0;
+exports.BookController = exports.BookCopyController = void 0;
 const common_1 = require("@nestjs/common");
 const book_service_1 = require("./book.service");
 const create_book_dto_1 = require("./create_book_dto");
 const update_book_dto_1 = require("./update_book_dto");
+let BookCopyController = class BookCopyController {
+    bookService;
+    constructor(bookService) {
+        this.bookService = bookService;
+    }
+    findBookCopy(param_id) {
+        return this.bookService.findBookCopy(Number(param_id));
+    }
+    removeBookCopy(param_id) {
+        return this.bookService.removeBookCopy(Number(param_id));
+    }
+};
+exports.BookCopyController = BookCopyController;
+__decorate([
+    (0, common_1.Get)(':param_id'),
+    __param(0, (0, common_1.Param)('param_id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], BookCopyController.prototype, "findBookCopy", null);
+__decorate([
+    (0, common_1.Delete)(':param_id'),
+    __param(0, (0, common_1.Param)('param_id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], BookCopyController.prototype, "removeBookCopy", null);
+exports.BookCopyController = BookCopyController = __decorate([
+    (0, common_1.Controller)('api/book-copy'),
+    __metadata("design:paramtypes", [book_service_1.BookService])
+], BookCopyController);
 let BookController = class BookController {
     bookService;
     constructor(bookService) {

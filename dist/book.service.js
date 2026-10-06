@@ -40,6 +40,11 @@ let BookService = class BookService {
             },
         });
     }
+    findBookCopy(book_copy_id) {
+        return this.prisma.bookCopy.findUnique({
+            where: { book_copy_id },
+        });
+    }
     async updateBook(book_id, new_book_info) {
         return this.prisma.book.update({
             where: { book_id: book_id },
@@ -53,6 +58,26 @@ let BookService = class BookService {
         return this.prisma.book.delete({
             where: { book_id },
         });
+    }
+    async removeBookCopy(book_copy_id) {
+        const bookCopy = await this.prisma.bookCopy.findUnique({
+            where: { book_copy_id },
+        });
+        if (!bookCopy) {
+            throw new Error('BookCopy not found');
+        }
+        const deletedBookCopy = await this.prisma.bookCopy.delete({
+            where: { book_copy_id },
+        });
+        await this.prisma.book.update({
+            where: { book_id: bookCopy.book_id },
+            data: {
+                total_count: {
+                    decrement: 1,
+                },
+            },
+        });
+        return deletedBookCopy;
     }
 };
 exports.BookService = BookService;

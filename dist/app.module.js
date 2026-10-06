@@ -15,7 +15,7 @@ let AppModule = class AppModule {
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        controllers: [book_controller_1.BookController],
+        controllers: [book_controller_1.BookController, book_controller_1.BookCopyController],
         providers: [book_service_1.BookService],
     })
 ], AppModule);
