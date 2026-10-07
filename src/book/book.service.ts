@@ -74,7 +74,7 @@
   	});
 	}
 
-	async removeBookCopy(book_copy_id: number) {
+  async removeBookCopy(book_copy_id: number) {
     const bookCopy = await this.prisma.bookCopy.findUnique({
         where: { book_copy_id },
     });
@@ -87,7 +87,7 @@
         where: { book_copy_id },
     });
 
-    await this.prisma.book.update({
+    const updatedBook = await this.prisma.book.update({
         where: { book_id: bookCopy.book_id },
         data: {
             total_count: {
@@ -96,9 +96,14 @@
         },
     });
 
+    if (updatedBook.total_count === 0) {
+        await this.prisma.book.delete({
+            where: { book_id: bookCopy.book_id },
+        });
+    }
+
     return deletedBookCopy;
 }
-	
 	
 }
  

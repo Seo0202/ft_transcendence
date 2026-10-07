@@ -24,4 +24,16 @@ model BookCopy {
   status  String @default("AVAILABLE")
 
   book Book @relation(fields: [book_id], references: [book_id])
+  loans Loan[]
+}
+
+model Loan {
+  loan_id      Int       @id @default(autoincrement())
+  user_id      Int
+  book_copy_id Int
+  borrowed_at  DateTime  @default(now())
+  due_at       DateTime
+  returned_at  DateTime?
+
+  book_copy BookCopy @relation(fields: [book_copy_id], references: [book_copy_id])
 }

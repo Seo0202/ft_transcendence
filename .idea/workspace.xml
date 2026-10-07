@@ -1,15 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="38a4ef60-e792-49a4-bc6c-79f9a6e08b02" name="변경" comment="" />
+    <list default="true" id="38a4ef60-e792-49a4-bc6c-79f9a6e08b02" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/dist/app.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/app.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/book.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/book.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/book.controller.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/book.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/book.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/create_book_dto.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/update_book_dto.ts" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Seo0202"
+  }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Seo0202/ft_transcendence.git",
+    "accountId": "505833fe-1030-46f8-83d4-5d44ed1feb75"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="3KIyrh8e57ZcfmjdtN747MQhxUb" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
@@ -18,8 +43,12 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.applicationServers",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
@@ -42,7 +71,11 @@
       <updated>1742004171109</updated>
       <workItem from="1742004176617" duration="58000" />
       <workItem from="1791259578981" duration="1000" />
+      <workItem from="1791369651931" duration="7000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

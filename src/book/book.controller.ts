@@ -9,10 +9,8 @@ import {
 } from '@nestjs/common';
 
 import { BookService } from './book.service';
-import { Book, BookCopy } from './book';
-import { CreateBookDto} from './create_book_dto';
-import { UpdateBookDto, UpdateBookCopyDto} from './update_book_dto';
-
+import { CreateBookDto } from './create_book_dto';
+import { UpdateBookDto, UpdateBookCopyDto } from './update_book_dto';
 
 @Controller('api/book-copy')
 export class BookCopyController {
