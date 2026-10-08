@@ -2,12 +2,15 @@
  import { Book, Status, BookCopy } from './book';
  import { CreateBookDto} from './create_book_dto';
  import { PrismaClient } from '@prisma/client';
+ import { SyncGateway } from '../sync/sync.gateway';
  import { UpdateBookDto, UpdateBookCopyDto} from './update_book_dto';
-
 
  @Injectable()
  export class BookService {
 	private prisma = new PrismaClient();
+  constructor(
+    private readonly syncGateway: SyncGateway,
+  ) {}
 	private books : Book[] = [];
 	private bookCopies: BookCopy[] = [];
 
@@ -18,6 +21,7 @@
 
 	  await this.createBookCopy(book);
 	  
+    this.syncGateway.sendBookSync(book);
 	  return book;
 	  
 	}
@@ -52,11 +56,14 @@
 	}
 
 	async updateBook(book_id: number, new_book_info: UpdateBookDto) {
-  	return this.prisma.book.update({
+  const book = await this.prisma.book.update({
     where: { book_id: book_id },
     data: new_book_info,
- 	 });
-	}
+  });
+
+  this.syncGateway.sendBookSync(book);
+  return book;
+ }
 
 	async updateBookCopy(book_copy_id: number, new_book_copy_info: UpdateBookCopyDto) {
   	return this.prisma.bookCopy.update({
@@ -65,14 +72,19 @@
  	 });
 	}
 
-	async removeBook(book_id: number) {
- 	await this.prisma.bookCopy.deleteMany({
+  async removeBook(book_id: number) {
+  await this.prisma.bookCopy.deleteMany({
     where: { book_id },
-  	});
-  	return this.prisma.book.delete({
+  });
+
+  const deletedBook = await this.prisma.book.delete({
     where: { book_id },
-  	});
-	}
+  });
+
+  this.syncGateway.sendBookDelete(book_id);
+
+  return deletedBook;
+  }
 
   async removeBookCopy(book_copy_id: number) {
     const bookCopy = await this.prisma.bookCopy.findUnique({

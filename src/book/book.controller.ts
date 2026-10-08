@@ -11,10 +11,11 @@ import {
 import { BookService } from './book.service';
 import { CreateBookDto } from './create_book_dto';
 import { UpdateBookDto, UpdateBookCopyDto } from './update_book_dto';
+import { SyncModule } from '../sync/sync.module';
 
 @Controller('api/book-copy')
 export class BookCopyController {
-    constructor(private readonly bookService: BookService) {}
+    constructor(private readonly bookService: BookService, ) {}
 
     @Get(':param_id')
     findBookCopy(@Param('param_id') param_id: string) {
