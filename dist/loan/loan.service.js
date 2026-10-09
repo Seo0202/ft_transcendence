@@ -67,6 +67,27 @@ let LoanService = class LoanService {
         });
         return returnedLoan;
     }
+    async findAll(page, limit) {
+        const skip = (page - 1) * limit;
+        const [loans, total] = await Promise.all([
+            this.prisma.loan.findMany({
+                skip,
+                take: limit,
+                orderBy: [
+                    { borrowed_at: 'desc' },
+                    { loan_id: 'desc' },
+                ],
+            }),
+            this.prisma.loan.count(),
+        ]);
+        return {
+            data: loans,
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+        };
+    }
 };
 exports.LoanService = LoanService;
 exports.LoanService = LoanService = __decorate([

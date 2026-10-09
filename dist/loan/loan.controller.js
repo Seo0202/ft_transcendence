@@ -26,6 +26,12 @@ let LoanController = class LoanController {
     findLoan(loan_id) {
         return this.loanService.findLoan(Number(loan_id));
     }
+    findAll(page, limit) {
+        if (page < 1 || limit < 1 || limit > 100) {
+            throw new common_1.BadRequestException('Invalid pagination');
+        }
+        return this.loanService.findAll(page, limit);
+    }
     returnLoan(loan_id) {
         return this.loanService.returnLoan(Number(loan_id));
     }
@@ -45,6 +51,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], LoanController.prototype, "findLoan", null);
+__decorate([
+    (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('page', new common_1.DefaultValuePipe(1), common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('limit', new common_1.DefaultValuePipe(10), common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", void 0)
+], LoanController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Patch)(':loan_id/return'),
     __param(0, (0, common_1.Param)('loan_id')),

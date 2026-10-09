@@ -75,4 +75,28 @@ async returnLoan(loan_id: number) {
   return returnedLoan;
 }
 
+async findAll(page: number, limit: number) {
+  const skip = (page - 1) * limit;
+
+  const [loans, total] = await Promise.all([
+    this.prisma.loan.findMany({
+      skip,
+      take: limit,
+      orderBy: [
+        { borrowed_at: 'desc' },
+        { loan_id: 'desc' },
+      ],
+    }),
+    this.prisma.loan.count(),
+  ]);
+
+  return {
+    data: loans,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  };
+}
+
 }

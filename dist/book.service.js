@@ -29,6 +29,7 @@ let BookService = class BookService {
             });
         }
     }
+    
     findAll() {
         return this.prisma.book.findMany();
     }

@@ -36,10 +36,27 @@
   	}
 	}
 	
-	findAll() {
-		return this.prisma.book.findMany();
-	}
+	async findAll(page: number, limit: number) {
+  const skip = (page - 1) * limit;
 
+  const [books, total] = await Promise.all([
+    this.prisma.book.findMany({
+      skip,
+      take: limit,
+      orderBy: { book_id: 'asc' },
+    }),
+    this.prisma.book.count(),
+  ]);
+
+  return {
+    data: books,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  };
+  }
+  
 	findOne(book_id: number) {
   	return this.prisma.book.findUnique({
     where: { book_id },
