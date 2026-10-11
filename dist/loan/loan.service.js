@@ -33,7 +33,7 @@ let LoanService = class LoanService {
         await this.prisma.bookCopy.update({
             where: { book_copy_id },
             data: {
-                status: 'BORROW',
+                status: 'BORROWED',
             },
         });
         return loan;

@@ -5,4 +5,7 @@ var Status;
 (function (Status) {
     Status[Status["AVAILABLE"] = 0] = "AVAILABLE";
     Status[Status["BORROWED"] = 1] = "BORROWED";
+    Status[Status["DAMAGED"] = 2] = "DAMAGED";
+    Status[Status["LOST"] = 3] = "LOST";
+    Status[Status["RESTRICTED"] = 4] = "RESTRICTED";
 })(Status || (exports.Status = Status = {}));

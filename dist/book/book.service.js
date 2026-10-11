@@ -21,6 +21,32 @@ let BookService = class BookService {
     }
     books = [];
     bookCopies = [];
+    async searchBooks(keyword) {
+        const books = await this.prisma.book.findMany({
+            where: {
+                OR: [
+                    { title: { contains: keyword } },
+                    { author: { contains: keyword } },
+                    { isbn: { contains: keyword } },
+                ],
+            },
+            include: {
+                copies: {
+                    select: {
+                        status: true,
+                    },
+                },
+            },
+        });
+        return books.map((book) => {
+            const { copies, cover, ...bookInfo } = book;
+            return {
+                ...bookInfo,
+                get_date: book.get_date?.toISOString().split('T')[0] ?? null,
+                status: copies[0]?.status ?? null,
+            };
+        });
+    }
     async createBook(new_book_info) {
         const book = await this.prisma.book.create({
             data: new_book_info,
@@ -44,25 +70,57 @@ let BookService = class BookService {
             this.prisma.book.findMany({
                 skip,
                 take: limit,
-                orderBy: { book_id: 'asc' },
+                include: {
+                    copies: {
+                        select: {
+                            status: true,
+                        },
+                    },
+                },
             }),
             this.prisma.book.count(),
         ]);
-        return {
-            data: books,
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-        };
-    }
-    findOne(book_id) {
-        return this.prisma.book.findUnique({
+        const data = books.map((book) => ({
+            book_id: book.book_id,
+            title: book.title,
+            isbn: book.isbn,
+            author: book.author,
+            publisher: book.publisher,
+            total_count: book.total_count,
+            category: book.category,
+            location: book.location,
+            get_date: book.get_date?.toISOString().split('T')[0] ?? null,
+            status: book.copies[0]?.status ?? null,
+        }));
+        return data;
+    } //(need amend : if total_count is not one)
+    async findOne(book_id) {
+        const book = await this.prisma.book.findUnique({
             where: { book_id },
             include: {
-                copies: true,
+                copies: {
+                    select: {
+                        status: true,
+                    },
+                },
             },
         });
+        if (!book) {
+            throw new common_1.NotFoundException('Book not found');
+        }
+        return {
+            book_id: book.book_id,
+            title: book.title,
+            isbn: book.isbn,
+            author: book.author,
+            publisher: book.publisher,
+            total_count: book.total_count,
+            category: book.category,
+            location: book.location,
+            get_date: book.get_date?.toISOString().split('T')[0] ?? null,
+            status: book.copies[0]?.status ?? null,
+            cover: book.cover,
+        };
     }
     findBookCopy(book_copy_id) {
         return this.prisma.bookCopy.findUnique({

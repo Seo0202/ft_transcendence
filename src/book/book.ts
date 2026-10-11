@@ -16,4 +16,7 @@ export interface BookCopy{
 export enum Status {
 	AVAILABLE = 0,
 	BORROWED = 1,
+  DAMAGED = 2,
+  LOST = 3,
+  RESTRICTED = 4
 }

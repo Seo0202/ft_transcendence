@@ -45,10 +45,16 @@ export class BookCopyController {
 export class BookController {
     constructor(private readonly bookService: BookService) {}
 
+    @Get('search/:keyword')
+     searchBooks(@Param('keyword') keyword: string) {
+     return this.bookService.searchBooks(keyword);
+    }
+    
     @Post()
     createBook(@Body() new_book_info: CreateBookDto) {
     return this.bookService.createBook(new_book_info);
     }
+    
     @Get()
     findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,

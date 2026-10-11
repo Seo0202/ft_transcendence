@@ -7,7 +7,7 @@ const XLSX = require("xlsx");
 const prisma = new PrismaClient();
 
 async function main() {
-  const csv = fs.readFileSync("./prisma/book.csv", "utf8");
+  const csv = fs.readFileSync("./prisma/dummy.csv", "utf8");
   const workbook = XLSX.read(csv, { type: "string", raw: true });
 
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -19,6 +19,9 @@ async function main() {
     total_count: Number(row["수량"]) || 1,
     author: String(row["저자"] ?? "").trim(),
     publisher: String(row["출판사"] ?? "").trim(),
+    category: String(row["세부분야"] ?? "").split(">")[1]?.trim() ?? "",
+    location: String(row["도서번호"] ?? "").trim(),
+    get_date: row["취득일자"] ? new Date(String(row["취득일자"]).trim().replace(/\.$/, "").replace(/\./g, "-")) : null,
   }));
 
   await prisma.book.createMany({ data: books });
