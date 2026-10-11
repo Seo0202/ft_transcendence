@@ -7,7 +7,7 @@ export interface Book {
   total_count: number;
   category: string | null;
   location: string | null;
-  get_date: string | null;
+  get_date: Date | null;
 }
 
 export interface BookCopy {
