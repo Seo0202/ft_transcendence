@@ -39,10 +39,6 @@ export class UpdateBookDto {
   @IsOptional()
   @IsDateString()
   get_date?: string;
-
-  @IsOptional()
-  @IsString()
-  cover?: string;
 }
 
 export class UpdateBookCopyDto {

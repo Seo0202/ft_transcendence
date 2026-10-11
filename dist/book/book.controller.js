@@ -70,11 +70,11 @@ let BookController = class BookController {
     createBook(new_book_info) {
         return this.bookService.createBook(new_book_info);
     }
-    findAll(page, limit) {
+    findAll(page, limit, title, isbn, author) {
         if (page < 1 || limit < 1 || limit > 100) {
             throw new common_1.BadRequestException('Invalid pagination');
         }
-        return this.bookService.findAll(page, limit);
+        return this.bookService.findAll(page, limit, title, isbn, author);
     }
     findOne(param_id) {
         return this.bookService.findOne(Number(param_id));
@@ -105,8 +105,11 @@ __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('page', new common_1.DefaultValuePipe(1), common_1.ParseIntPipe)),
     __param(1, (0, common_1.Query)('limit', new common_1.DefaultValuePipe(10), common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Query)('title')),
+    __param(3, (0, common_1.Query)('isbn')),
+    __param(4, (0, common_1.Query)('author')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, String, String, String]),
     __metadata("design:returntype", void 0)
 ], BookController.prototype, "findAll", null);
 __decorate([

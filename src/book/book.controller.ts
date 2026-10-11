@@ -44,28 +44,28 @@ export class BookCopyController {
 @Controller('api/books')
 export class BookController {
     constructor(private readonly bookService: BookService) {}
-
-    @Get('search/:keyword')
-     searchBooks(@Param('keyword') keyword: string) {
-     return this.bookService.searchBooks(keyword);
-    }
     
     @Post()
     createBook(@Body() new_book_info: CreateBookDto) {
     return this.bookService.createBook(new_book_info);
     }
     
-    @Get()
-    findAll(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    ) {
-    if (page < 1 || limit < 1 || limit > 100) {
+   
+  @Get()
+  findAll(
+  @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  @Query('title') title?: string,
+  @Query('isbn') isbn?: string,
+  @Query('author') author?: string,
+  ) {
+  if (page < 1 || limit < 1 || limit > 100) {
     throw new BadRequestException('Invalid pagination');
-    }
+  }
 
-     return this.bookService.findAll(page, limit); 
-    }
+  return this.bookService.findAll(page, limit, title, isbn, author);
+  }
+
 
     @Get(':param_id')
     findOne(@Param('param_id') param_id: string) {

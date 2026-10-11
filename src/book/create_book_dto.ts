@@ -39,8 +39,4 @@ export class CreateBookDto {
   @IsOptional()
   @IsDateString()
   get_date?: string;
-
-  @IsOptional()
-  @IsString()
-  cover?: string;
 }

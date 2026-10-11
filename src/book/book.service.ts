@@ -14,35 +14,6 @@
 	private books : Book[] = [];
 	private bookCopies: BookCopy[] = [];
 
-async searchBooks(keyword: string) {
-  const books = await this.prisma.book.findMany({
-    where: {
-      OR: [
-        { title: { contains: keyword } },
-        { author: { contains: keyword } },
-        { isbn: { contains: keyword } },
-      ],
-    },
-    include: {
-      copies: {
-        select: {
-          status: true,
-        },
-      },
-    },
-  });
-
-  return books.map((book) => {
-    const { copies, cover, ...bookInfo } = book;
-
-    return {
-      ...bookInfo,
-      get_date: book.get_date?.toISOString().split('T')[0] ?? null,
-      status: copies[0]?.status ?? null,
-    };
-  });
-}
-
 	async createBook(new_book_info: CreateBookDto) {
   	const book = await this.prisma.book.create({
     data: new_book_info,
@@ -65,11 +36,25 @@ async searchBooks(keyword: string) {
   	}
 	}
 	
-	async findAll(page: number, limit: number) {
+	
+async findAll(
+  page: number,
+  limit: number,
+  title?: string,
+  isbn?: string,
+  author?: string,
+) {
   const skip = (page - 1) * limit;
+
+  const where = {
+    ...(title && { title: { contains: title } }),
+    ...(isbn && { isbn: { contains: isbn } }),
+    ...(author && { author: { contains: author } }),
+  };
 
   const [books, total] = await Promise.all([
     this.prisma.book.findMany({
+      where,
       skip,
       take: limit,
       include: {
@@ -80,7 +65,7 @@ async searchBooks(keyword: string) {
         },
       },
     }),
-    this.prisma.book.count(),
+    this.prisma.book.count({ where }),
   ]);
 
   const data = books.map((book) => ({
@@ -93,11 +78,14 @@ async searchBooks(keyword: string) {
     category: book.category,
     location: book.location,
     get_date: book.get_date?.toISOString().split('T')[0] ?? null,
-    status: book.copies[0]?.status ?? null,
+    status:
+    book.total_count === 1
+    ? book.copies[0]?.status ?? null
+    : book.copies.map((copy) => copy.status),
   }));
 
   return data;
-}//(need amend : if total_count is not one)
+}
   
 	async findOne(book_id: number) {
   const book = await this.prisma.book.findUnique({
@@ -126,7 +114,7 @@ async searchBooks(keyword: string) {
     location: book.location,
     get_date: book.get_date?.toISOString().split('T')[0] ?? null,
     status: book.copies[0]?.status ?? null,
-    cover : book.cover,
+
   };
 }
 	

@@ -39,7 +39,7 @@ let BookService = class BookService {
             },
         });
         return books.map((book) => {
-            const { copies, cover, ...bookInfo } = book;
+            const { copies, ...bookInfo } = book;
             return {
                 ...bookInfo,
                 get_date: book.get_date?.toISOString().split('T')[0] ?? null,
@@ -64,10 +64,16 @@ let BookService = class BookService {
             });
         }
     }
-    async findAll(page, limit) {
+    async findAll(page, limit, title, isbn, author) {
         const skip = (page - 1) * limit;
+        const where = {
+            ...(title && { title: { contains: title } }),
+            ...(isbn && { isbn: { contains: isbn } }),
+            ...(author && { author: { contains: author } }),
+        };
         const [books, total] = await Promise.all([
             this.prisma.book.findMany({
+                where,
                 skip,
                 take: limit,
                 include: {
@@ -78,7 +84,7 @@ let BookService = class BookService {
                     },
                 },
             }),
-            this.prisma.book.count(),
+            this.prisma.book.count({ where }),
         ]);
         const data = books.map((book) => ({
             book_id: book.book_id,
@@ -90,10 +96,12 @@ let BookService = class BookService {
             category: book.category,
             location: book.location,
             get_date: book.get_date?.toISOString().split('T')[0] ?? null,
-            status: book.copies[0]?.status ?? null,
+            status: book.total_count === 1
+                ? book.copies[0]?.status ?? null
+                : book.copies.map((copy) => copy.status),
         }));
         return data;
-    } //(need amend : if total_count is not one)
+    }
     async findOne(book_id) {
         const book = await this.prisma.book.findUnique({
             where: { book_id },
@@ -119,7 +127,6 @@ let BookService = class BookService {
             location: book.location,
             get_date: book.get_date?.toISOString().split('T')[0] ?? null,
             status: book.copies[0]?.status ?? null,
-            cover: book.cover,
         };
     }
     findBookCopy(book_copy_id) {
