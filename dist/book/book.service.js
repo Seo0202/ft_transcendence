@@ -21,32 +21,6 @@ let BookService = class BookService {
     }
     books = [];
     bookCopies = [];
-    async searchBooks(keyword) {
-        const books = await this.prisma.book.findMany({
-            where: {
-                OR: [
-                    { title: { contains: keyword } },
-                    { author: { contains: keyword } },
-                    { isbn: { contains: keyword } },
-                ],
-            },
-            include: {
-                copies: {
-                    select: {
-                        status: true,
-                    },
-                },
-            },
-        });
-        return books.map((book) => {
-            const { copies, ...bookInfo } = book;
-            return {
-                ...bookInfo,
-                get_date: book.get_date?.toISOString().split('T')[0] ?? null,
-                status: copies[0]?.status ?? null,
-            };
-        });
-    }
     async createBook(new_book_info) {
         const book = await this.prisma.book.create({
             data: new_book_info,

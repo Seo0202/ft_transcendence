@@ -64,9 +64,6 @@ let BookController = class BookController {
     constructor(bookService) {
         this.bookService = bookService;
     }
-    searchBooks(keyword) {
-        return this.bookService.searchBooks(keyword);
-    }
     createBook(new_book_info) {
         return this.bookService.createBook(new_book_info);
     }
@@ -87,13 +84,6 @@ let BookController = class BookController {
     }
 };
 exports.BookController = BookController;
-__decorate([
-    (0, common_1.Get)('search/:keyword'),
-    __param(0, (0, common_1.Param)('keyword')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], BookController.prototype, "searchBooks", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

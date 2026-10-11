@@ -5,12 +5,23 @@ export interface Book {
   author: string | null;
   publisher: string | null;
   total_count: number;
+  category: string | null;
+  location: string | null;
+  get_date: string | null;
 }
 
-export interface BookCopy{
-	book_copy_id : number;
-	book_id : number;
-	status : Status;
+export interface BookCopy {
+  book_copy_id: number;
+  book_id: number;
+  status: Status;
+}
+
+export interface BookListItem extends Book {
+  status: Status | Status[] | null;
+}
+
+export interface BookDetail extends Book {
+  copies: BookCopy[];
 }
 
 export enum Status {
