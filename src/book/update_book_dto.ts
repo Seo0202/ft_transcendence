@@ -39,6 +39,10 @@ export class UpdateBookDto {
   @IsOptional()
   @IsDateString()
   get_date?: string;
+
+  @IsOptional()
+  @IsDateString()
+  status?: string;
 }
 
 export class UpdateBookCopyDto {

@@ -52,6 +52,7 @@ let BookService = class BookService {
                 take: limit,
                 include: {
                     copies: {
+                        orderBy: { book_copy_id: 'asc' },
                         select: {
                             status: true,
                         },
@@ -108,13 +109,32 @@ let BookService = class BookService {
             where: { book_copy_id },
         });
     }
-    async updateBook(book_id, new_book_info) {
-        const book = await this.prisma.book.update({
-            where: { book_id: book_id },
-            data: new_book_info,
+    async updateBook(book_id, dto) {
+        const { status, ...bookData } = dto;
+        return this.prisma.$transaction(async (tx) => {
+            const book = await tx.book.update({
+                where: { book_id },
+                data: bookData,
+            });
+            const copy = await tx.bookCopy.findFirst({
+                where: { book_id },
+                orderBy: { book_copy_id: 'asc' },
+            });
+            if (status !== undefined) {
+                if (!copy) {
+                    throw new common_1.NotFoundException('BookCopy not found');
+                }
+                await tx.bookCopy.update({
+                    where: { book_copy_id: copy.book_copy_id },
+                    data: { status },
+                });
+            }
+            return {
+                ...book,
+                get_date: book.get_date?.toISOString().split('T')[0] ?? null,
+                status: status !== undefined ? status : copy?.status ?? null,
+            };
         });
-        this.syncGateway.sendBookSync(book);
-        return book;
     }
     async updateBookCopy(book_copy_id, new_book_copy_info) {
         return this.prisma.bookCopy.update({

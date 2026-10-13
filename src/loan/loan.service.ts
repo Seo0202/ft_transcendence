@@ -19,7 +19,8 @@ export class LoanService {
     }
 
     const dueAt = new Date();
-    dueAt.setDate(dueAt.getDate() + 14);
+    dueAt.setDate(dueAt.getDate() + 4);
+    dueAt.setHours(0, 0, 0, 0);
 
     const loan = await this.prisma.loan.create({
       data: {
