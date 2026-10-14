@@ -7,25 +7,20 @@ export class LoanService {
   private prisma = new PrismaClient();
 
   async createLoan(user_id: number, book_copy_id: number) {
-    const bookCopy = await this.prisma.bookCopy.findUnique({
-      where: { book_copy_id },
-    });
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
 
-    if (!bookCopy) {
-      throw new Error('BookCopy not found');
-    }
+  const dueAt = new Date(
+    Date.UTC(
+      kst.getUTCFullYear(),
+      kst.getUTCMonth(),
+      kst.getUTCDate() + 4,
+      0, 0, 0, 0,
+    ) - 9 * 60 * 60 * 1000
+  );
 
-    if (bookCopy.status !== 'AVAILABLE') {
-      throw new Error('BookCopy is not available');
-    }
-
-    const now = new Date();
-    const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-    const dueAt = new Date(Date.UTC(kst.getUTCFullYear(),
-    kst.getUTCMonth(),
-    kst.getUTCDate() + 4, 0, 0, 0, 0) - 9 * 60 * 60 * 1000);
-
-    const loan = await this.prisma.loan.create({
+  return this.prisma.$transaction(async (tx) => {
+    const loan = await tx.loan.create({
       data: {
         user_id,
         book_copy_id,
@@ -33,108 +28,63 @@ export class LoanService {
       },
     });
 
-    await this.prisma.bookCopy.update({
+    await tx.bookCopy.update({
       where: { book_copy_id },
-      data: {
-        status: 'BORROWED',
-      },
+      data: { status: 'BORROWED' },
     });
 
     return loan;
-  }
-
+  });
+}
   async findLoan(loan_id: number) {
     return this.prisma.loan.findUnique({
       where: { loan_id },
-      include: {
-        book_copy: {
-          select: {
-            status: true,
-          },
-        },
-      },
     });
   }
 
-  async returnLoan(loan_id: number) {
-    const loan = await this.prisma.loan.findUnique({
-      where: { loan_id },
-    });
+ 
 
-    if (!loan) {
-      throw new Error('Loan not found');
-    }
-
-    if (loan.returned_at !== null) {
-      throw new Error('Already returned');
-    }
-
-    const returnedLoan = await this.prisma.loan.update({
+async returnLoan(loan_id: number) {
+  return this.prisma.$transaction(async (tx) => {
+    const loan = await tx.loan.update({
       where: { loan_id },
       data: {
         returned_at: new Date(),
       },
     });
 
-    await this.prisma.bookCopy.update({
+    await tx.bookCopy.update({
       where: { book_copy_id: loan.book_copy_id },
       data: {
         status: 'AVAILABLE',
       },
     });
 
-    return returnedLoan;
-  }
+    return loan;
+  });
+}
 
- async findAll(page: number, limit: number) {
-  const skip = (page - 1) * limit;
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
 
-  const [loans, total] = await Promise.all([
-    this.prisma.loan.findMany({
-      skip,
-      take: limit,
-      orderBy: [
-        { borrowed_at: 'desc' },
-        { loan_id: 'desc' },
-      ],
-      include: {
-        book_copy: {
-          select: {
-            status: true,
-          },
-        },
-      },
-    }),
-    this.prisma.loan.count(),
-  ]);
-
-  const now = new Date();
-
-  const data = loans.map((loan) => {
-    const { book_copy, ...rest } = loan;
-
-    let status: string;
-
-    if (loan.returned_at) {
-      status = 'RETURNED';
-    } else if (loan.due_at < now) {
-      status = 'OVERDUE';
-    } else {
-      status = 'BORROWED';
-    }
+    const [loans, total] = await Promise.all([
+      this.prisma.loan.findMany({
+        skip,
+        take: limit,
+        orderBy: [
+          { borrowed_at: 'desc' },
+          { loan_id: 'desc' },
+        ],
+      }),
+      this.prisma.loan.count(),
+    ]);
 
     return {
-      ...rest,
-      status,
+      data: loans,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
     };
-  });
-
-  return {
-    data,
-    total,
-    page,
-    limit,
-    totalPages: Math.ceil(total / limit),
-  };
-}
+  }
 }
