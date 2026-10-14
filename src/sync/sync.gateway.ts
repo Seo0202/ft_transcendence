@@ -1,3 +1,4 @@
+
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -123,6 +124,8 @@ export class SyncGateway implements OnGatewayConnection {
   ) {
     try {
       if (
+        typeof message.request_id !== 'string' ||
+        !message.request_id ||
         typeof message.device_id !== 'string' ||
         !message.device_id ||
         !Number.isSafeInteger(message.last_sync_version) ||
@@ -143,6 +146,7 @@ export class SyncGateway implements OnGatewayConnection {
         client.send(
           JSON.stringify({
             type: 'DB_SYNC',
+            request_id: message.request_id,
             sync_version: 1,
             sync_id: `sync-${randomUUID()}`,
             operation: 'UPSERT',
@@ -159,6 +163,7 @@ export class SyncGateway implements OnGatewayConnection {
       client.send(
         JSON.stringify({
           type: 'SYNC_COMPLETE',
+          request_id: message.request_id,
           device_id: message.device_id,
           status: 'SUCCESS',
           sync_version: 1,
@@ -179,6 +184,7 @@ export class SyncGateway implements OnGatewayConnection {
         client.send(
           JSON.stringify({
             type: 'SYNC_COMPLETE',
+            request_id: message?.request_id ?? null,
             device_id: message?.device_id ?? null,
             status: 'FAILED',
             error_code: 'SYNC_FAILED',

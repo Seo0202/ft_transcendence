@@ -1,4 +1,5 @@
 import {
+  IsIn,
   IsOptional,
   IsString,
   IsInt,
@@ -41,7 +42,7 @@ export class UpdateBookDto {
   get_date?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsIn(['AVAILABLE', 'BORROWED', 'DAMAGED', 'RESTRICTED', 'LOST'])
   status?: string;
 }
 

@@ -37,6 +37,8 @@ model Loan {
   borrowed_at  DateTime  @default(now())
   due_at       DateTime
   returned_at  DateTime?
+  borrow_image String?
+  return_image String?
 
   book_copy BookCopy @relation(fields: [book_copy_id], references: [book_copy_id])
 }

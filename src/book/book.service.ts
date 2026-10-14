@@ -1,4 +1,4 @@
- import { Injectable, NotFoundException} from '@nestjs/common';
+ import { Injectable, BadRequestException, NotFoundException} from '@nestjs/common';
  import { Book, Status, BookCopy } from './book';
  import { CreateBookDto} from './create_book_dto';
  import { PrismaClient } from '@prisma/client';
@@ -125,7 +125,7 @@ async findAll(
     });
 	}
 
-async updateBook(book_id: number, dto: UpdateBookDto) {
+  async updateBook(book_id: number, dto: UpdateBookDto) {
   const { status, ...bookData } = dto;
 
   return this.prisma.$transaction(async (tx) => {
@@ -139,9 +139,65 @@ async updateBook(book_id: number, dto: UpdateBookDto) {
       orderBy: { book_copy_id: 'asc' },
     });
 
+    if (!copy) {
+      throw new NotFoundException('BookCopy not found');
+    }
+
     if (status !== undefined) {
-      if (!copy) {
-        throw new NotFoundException('BookCopy not found');
+      const allowed = [
+        'AVAILABLE',
+        'BORROWED',
+        'DAMAGED',
+        'RESTRICTED',
+        'LOST',
+      ];
+
+      if (!allowed.includes(status)) {
+        throw new BadRequestException('Invalid status');
+      }
+
+      const activeLoan = await tx.loan.findFirst({
+        where: {
+          book_copy_id: copy.book_copy_id,
+          returned_at: null,
+        },
+        orderBy: { borrowed_at: 'desc' },
+      });
+
+      if (status === 'BORROWED') {
+        if (copy.status !== 'AVAILABLE' || activeLoan) {
+          throw new BadRequestException('Book is not available');
+        }
+
+        const now = new Date();
+        const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+        const dueAt = new Date(Date.UTC(kst.getUTCFullYear(),
+        kst.getUTCMonth(),
+        kst.getUTCDate() + 4, 0, 0, 0, 0) - 9 * 60 * 60 * 1000);
+
+        await tx.loan.create({
+          data: {
+            user_id: 0,
+            book_copy_id: copy.book_copy_id,
+            due_at: dueAt,
+          },
+        });
+      }
+
+      if (status === 'AVAILABLE' && activeLoan) {
+        await tx.loan.update({
+          where: { loan_id: activeLoan.loan_id },
+          data: { returned_at: new Date() },
+        });
+      }
+
+      if (
+        ['DAMAGED', 'RESTRICTED', 'LOST'].includes(status) &&
+        activeLoan
+      ) {
+        throw new BadRequestException(
+          'Cannot change status while book is borrowed',
+        );
       }
 
       await tx.bookCopy.update({
@@ -153,7 +209,7 @@ async updateBook(book_id: number, dto: UpdateBookDto) {
     return {
       ...book,
       get_date: book.get_date?.toISOString().split('T')[0] ?? null,
-      status: status !== undefined ? status : copy?.status ?? null,
+      status: status !== undefined ? status : copy.status,
     };
   });
 }

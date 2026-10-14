@@ -66,7 +66,7 @@ __decorate([
 ], UpdateBookDto.prototype, "get_date", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsIn)(['AVAILABLE', 'BORROWED', 'DAMAGED', 'RESTRICTED', 'LOST']),
     __metadata("design:type", String)
 ], UpdateBookDto.prototype, "status", void 0);
 class UpdateBookCopyDto {

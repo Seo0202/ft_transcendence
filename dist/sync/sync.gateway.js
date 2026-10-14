@@ -103,7 +103,9 @@ let SyncGateway = class SyncGateway {
     }
     async handleSyncRequest(client, message) {
         try {
-            if (typeof message.device_id !== 'string' ||
+            if (typeof message.request_id !== 'string' ||
+                !message.request_id ||
+                typeof message.device_id !== 'string' ||
                 !message.device_id ||
                 !Number.isSafeInteger(message.last_sync_version) ||
                 message.last_sync_version < 0) {
@@ -117,6 +119,7 @@ let SyncGateway = class SyncGateway {
                 }
                 client.send(JSON.stringify({
                     type: 'DB_SYNC',
+                    request_id: message.request_id,
                     sync_version: 1,
                     sync_id: `sync-${(0, node_crypto_1.randomUUID)()}`,
                     operation: 'UPSERT',
@@ -129,6 +132,7 @@ let SyncGateway = class SyncGateway {
             }
             client.send(JSON.stringify({
                 type: 'SYNC_COMPLETE',
+                request_id: message.request_id,
                 device_id: message.device_id,
                 status: 'SUCCESS',
                 sync_version: 1,
@@ -144,6 +148,7 @@ let SyncGateway = class SyncGateway {
             if (client.readyState === ws_1.WebSocket.OPEN) {
                 client.send(JSON.stringify({
                     type: 'SYNC_COMPLETE',
+                    request_id: message?.request_id ?? null,
                     device_id: message?.device_id ?? null,
                     status: 'FAILED',
                     error_code: 'SYNC_FAILED',
