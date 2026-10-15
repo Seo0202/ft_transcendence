@@ -4,6 +4,7 @@ import {
   IsInt,
   IsDateString,
   Min,
+  IsIn,
 } from 'class-validator';
 
 export class CreateBookDto {
@@ -39,4 +40,8 @@ export class CreateBookDto {
   @IsOptional()
   @IsDateString()
   get_date?: string;
+
+   @IsOptional()
+   @IsIn(['AVAILABLE', 'BORROWED', 'DAMAGED', 'RESTRICTED', 'LOST'])
+   status?: string;
 }

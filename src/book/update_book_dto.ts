@@ -47,6 +47,5 @@ export class UpdateBookDto {
 }
 
 export class UpdateBookCopyDto {
-  cover?: string;
   status?: string;
 }

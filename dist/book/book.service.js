@@ -22,10 +22,18 @@ let BookService = class BookService {
     books = [];
     bookCopies = [];
     async createBook(new_book_info) {
+        const { status, ...book_info } = new_book_info;
         const book = await this.prisma.book.create({
-            data: new_book_info,
+            data: book_info,
         });
-        await this.createBookCopy(book);
+        for (let i = 0; i < book.total_count; i++) {
+            await this.prisma.bookCopy.create({
+                data: {
+                    book_id: book.book_id,
+                    status: status ?? 'AVAILABLE',
+                },
+            });
+        }
         this.syncGateway.sendBookSync(book);
         return book;
     }
@@ -71,9 +79,7 @@ let BookService = class BookService {
             category: book.category,
             location: book.location,
             get_date: book.get_date?.toISOString().split('T')[0] ?? null,
-            status: book.total_count === 1
-                ? book.copies[0]?.status ?? null
-                : book.copies.map((copy) => copy.status),
+            status: book.copies[0]?.status ?? null,
         }));
         return data;
     }

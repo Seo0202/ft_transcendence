@@ -20,6 +20,7 @@ class CreateBookDto {
     category;
     location;
     get_date;
+    status;
 }
 exports.CreateBookDto = CreateBookDto;
 __decorate([
@@ -63,3 +64,8 @@ __decorate([
     (0, class_validator_1.IsDateString)(),
     __metadata("design:type", String)
 ], CreateBookDto.prototype, "get_date", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(['AVAILABLE', 'BORROWED', 'DAMAGED', 'RESTRICTED', 'LOST']),
+    __metadata("design:type", String)
+], CreateBookDto.prototype, "status", void 0);

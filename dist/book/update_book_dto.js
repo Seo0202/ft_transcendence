@@ -70,7 +70,6 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateBookDto.prototype, "status", void 0);
 class UpdateBookCopyDto {
-    cover;
     status;
 }
 exports.UpdateBookCopyDto = UpdateBookCopyDto;
