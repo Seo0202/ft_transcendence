@@ -34,7 +34,7 @@ let BookService = class BookService {
                 },
             });
         }
-        this.syncGateway.sendBookSync(book);
+        this.syncGateway.sendBookCreate(book);
         return book;
     }
     async createBookCopy(book) {
@@ -117,7 +117,7 @@ let BookService = class BookService {
     }
     async updateBook(book_id, dto) {
         const { status, ...bookData } = dto;
-        return this.prisma.$transaction(async (tx) => {
+        const updatedBook = await this.prisma.$transaction(async (tx) => {
             const book = await tx.book.update({
                 where: { book_id },
                 data: bookData,
@@ -183,6 +183,8 @@ let BookService = class BookService {
                 status: status !== undefined ? status : copy.status,
             };
         });
+        this.syncGateway.sendBookUpdate(updatedBook);
+        return updatedBook;
     }
     async updateBookCopy(book_copy_id, new_book_copy_info) {
         return this.prisma.bookCopy.update({

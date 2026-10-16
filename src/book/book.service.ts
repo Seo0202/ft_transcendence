@@ -30,7 +30,7 @@
     });
   }
 
-  this.syncGateway.sendBookSync(book);
+  this.syncGateway.sendBookCreate(book);
 
   return book;
  }
@@ -224,7 +224,7 @@ async findAll(
     };
   });
 
-  this.syncGateway.sendBookSync(updatedBook);
+  this.syncGateway.sendBookUpdate(updatedBook);
 
   return updatedBook;
 }
