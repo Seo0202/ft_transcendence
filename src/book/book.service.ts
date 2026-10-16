@@ -134,7 +134,7 @@ async findAll(
   async updateBook(book_id: number, dto: UpdateBookDto) {
   const { status, ...bookData } = dto;
 
-  return this.prisma.$transaction(async (tx) => {
+  const updatedBook = await this.prisma.$transaction(async (tx) => {
     const book = await tx.book.update({
       where: { book_id },
       data: bookData,
@@ -177,9 +177,14 @@ async findAll(
 
         const now = new Date();
         const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-        const dueAt = new Date(Date.UTC(kst.getUTCFullYear(),
-        kst.getUTCMonth(),
-        kst.getUTCDate() + 4, 0, 0, 0, 0) - 9 * 60 * 60 * 1000);
+        const dueAt = new Date(
+          Date.UTC(
+            kst.getUTCFullYear(),
+            kst.getUTCMonth(),
+            kst.getUTCDate() + 4,
+            0, 0, 0, 0,
+          ) - 9 * 60 * 60 * 1000,
+        );
 
         await tx.loan.create({
           data: {
@@ -218,6 +223,10 @@ async findAll(
       status: status !== undefined ? status : copy.status,
     };
   });
+
+  this.syncGateway.sendBookSync(updatedBook);
+
+  return updatedBook;
 }
 
 	async updateBookCopy(book_copy_id: number, new_book_copy_info: UpdateBookCopyDto) {
