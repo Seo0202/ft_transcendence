@@ -14,11 +14,12 @@ export class SyncGateway implements OnGatewayConnection {
   server!: WsServer;
 
   private prisma = new PrismaClient();
+  private syncVersion = 0;
 
   sendBookCreate(book: any) {
     const message = {
       type: 'BOOK_SYNC_EVENT',
-      sync_version: 1,
+      sync_version: ++this.syncVersion,
       sync_id: `sync-${randomUUID()}`,
       operation: 'CREATE',
       book_id: book.book_id,
@@ -30,7 +31,7 @@ export class SyncGateway implements OnGatewayConnection {
     sendBookUpdate(book: any) {
     const message = {
       type: 'BOOK_SYNC_EVENT',
-      sync_version: 1,
+      sync_version: ++this.syncVersion,
       sync_id: `sync-${randomUUID()}`,
       operation: 'UPDATE',
       book_id: book.book_id,
@@ -42,7 +43,7 @@ export class SyncGateway implements OnGatewayConnection {
   sendBookDelete(book_id: number) {
     const message = {
       type: 'BOOK_SYNC_EVENT',
-      sync_version: 1,
+      sync_version: ++this.syncVersion,
       sync_id: `sync-${randomUUID()}`,
       operation: 'DELETE',
       book_id: book_id,

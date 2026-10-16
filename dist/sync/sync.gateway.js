@@ -17,10 +17,11 @@ const node_crypto_1 = require("node:crypto");
 let SyncGateway = class SyncGateway {
     server;
     prisma = new client_1.PrismaClient();
+    syncVersion = 0;
     sendBookCreate(book) {
         const message = {
             type: 'BOOK_SYNC_EVENT',
-            sync_version: 1,
+            sync_version: ++this.syncVersion,
             sync_id: `sync-${(0, node_crypto_1.randomUUID)()}`,
             operation: 'CREATE',
             book_id: book.book_id,
@@ -30,7 +31,7 @@ let SyncGateway = class SyncGateway {
     sendBookUpdate(book) {
         const message = {
             type: 'BOOK_SYNC_EVENT',
-            sync_version: 1,
+            sync_version: ++this.syncVersion,
             sync_id: `sync-${(0, node_crypto_1.randomUUID)()}`,
             operation: 'UPDATE',
             book_id: book.book_id,
@@ -40,7 +41,7 @@ let SyncGateway = class SyncGateway {
     sendBookDelete(book_id) {
         const message = {
             type: 'BOOK_SYNC_EVENT',
-            sync_version: 1,
+            sync_version: ++this.syncVersion,
             sync_id: `sync-${(0, node_crypto_1.randomUUID)()}`,
             operation: 'DELETE',
             book_id: book_id,
